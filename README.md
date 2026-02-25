@@ -183,7 +183,7 @@ For any queries or suggestions, feel free to reach out!
 
 ---
 
-### 🌟 Made with ❤️ by **Shree Jaybhay** 🌟
+### 🌟 Made with ❤️ by **Gaurav Malviya** 🌟
 
 *Building the future, one line of code at a time.*
 
@@ -194,7 +194,7 @@ For any queries or suggestions, feel free to reach out!
 </p>
 
 <p>
-  <i>Designed & Developed by <b>Shree Jaybhay</b></i>
+  <i>Designed & Developed by <b>Gaurav Malviya</b></i>
 </p>
 
 ---
