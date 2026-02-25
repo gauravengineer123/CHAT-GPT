@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fat-Boy AI</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Handwriting Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="output.css" />
+    
+    <!-- New Robot Icon for Favicon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C14.21 4 16 5.79 16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4ZM7 9C7 9 7 9 7 9C7 9 7 9 7 9V10C7 11.66 8.34 13 10 13V14H14V13C15.66 13 17 11.66 17 10V9C17 9 17 9 17 9C17 9 17 9 17 9H7ZM8.5 18H15.5C16.33 18 17 17.33 17 16.5C17 15.67 16.33 15 15.5 15H8.5C7.67 15 7 15.67 7 16.5C7 17.33 7.67 18 8.5 18Z'/></svg>"
+    />
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+    
+
+<style>
+    /* Font Handwriting Class */
+    .font-handwriting {
+      font-family: 'Dancing Script', cursive;
+    }
+   
+    /* Gradient Animation Keyframes */
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  
+    /* Animation Class */
+    .animate-gradient {
+      background-size: 200% auto;
+      animation: gradient-flow 5s ease infinite;
+    }
+
+    /* Light Mode Overrides */
+    body.light-mode {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+    }
+    body.light-mode nav,
+    body.light-mode main,
+    body.light-mode section,
+    body.light-mode div,
+    body.light-mode header {
+        border-color: #e5e7eb !important;
+    }
+    body.light-mode [class*="bg-[#212121]"],
+    body.light-mode main,
+    body.light-mode .main-bg {
+        background-color: #ffffff !important;
+    }
+    body.light-mode [class*="bg-[#171717]"],
+    body.light-mode #desktop-sidebar,
+    body.light-mode #mobile-sidebar-content {
+        background-color: #f9fafb !important;
+    }
+    body.light-mode [class*="bg-[#2F2F2F]"],
+    body.light-mode .hover\:bg-\[\#2F2F2F\]:hover {
+        background-color: #f3f4f6 !important;
+    }
+    body.light-mode [class*="bg-[#383838]"] {
+        background-color: #e5e7eb !important;
+    }
+    body.light-mode .text-white,
+    body.light-mode h1,
+    body.light-mode h2,
+    body.light-mode p,
+    body.light-mode span:not(.text-transparent) {
+        color: #1f2937 !important;
+    }
+    body.light-mode .text-\[\#828282\],
+    body.light-mode .text-\[\#676767\] {
+        color: #6b7280 !important;
+    }
+    body.light-mode [class*="border-[#4E4E4E]"],
+    body.light-mode [class*="border-[#444444]"] {
+        border-color: #e5e7eb !important;
+    }
+    body.light-mode input::placeholder {
+        color: #9ca3af !important;
+    }
+    body.light-mode input {
+        color: #1f2937 !important;
+    }
+    body.light-mode .hover\:bg-\[\#212121\]:hover {
+        background-color: #f3f4f6 !important;
+    }
+    body.light-mode .border-gray-600,
+    body.light-mode .border-gray-700 {
+        border-color: #e5e7eb !important;
+    }
+    body.light-mode #sidebar-toggle {
+        border-color: #9ca3af !important;
+    }
+    body.light-mode #sidebar-toggle span {
+        color: #4b5563 !important;
+    }
+    body.light-mode button {
+        color: #1f2937 !important;
+    }
+    
+    /* Icon styling */
+    .fatboy-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Dark Mode Active Styles */
+    body.dark-mode-active {
+        background-color: #1a1a1a !important;
+    }
+    body.dark-mode-active .bg-\[\#212121\] {
+        background-color: #1a1a1a !important;
+    }
+    body.dark-mode-active .bg-\[\#171717\] {
+        background-color: #0d0d0d !important;
+    }
+    body.dark-mode-active .bg-\[\#2F2F2F\] {
+        background-color: #252525 !important;
+    }
+    </style>
+  </head>
+  <body
+    class="flex flex-col md:flex-row bg-[#212121] md:overflow-y-hidden md:overflow-x-hidden 
+    w-[100dhv] h-[100dvh] overflow-y-auto transition-colors duration-300"
+  >
+    <!-- Upgrade Modal -->
+    <section
+      class="absolute z-50 hidden w-screen h-screen m-auto bg-black bg-opacity-80"
+      id="Upgrade-your-plan"
+    >
+      <div class="w-screen h-screen my-2">
+        <div
+          class="w-[97%] h-[100dvh] m-auto bg-[#2F2F2F] flex flex-col justify-between border-[1px] border-[#444444] rounded-md md:w-[96%] md:h-[62%] md:mt-[25%] lg:h-[47%] lg:w-[80%] xl:w-[70%] xl:h-[97.5%] xl:m-[auto]"
+        >
+          <div class="w-full h-20">
+            <div
+              class="flex items-center justify-between w-full h-full px-6 border-[#444444] border-b-[1px]"
+            >
+              <h1 class="text-lg font-bold text-white">Upgrade your plan</h1>
+              <button id="close-pricing" onclick="document.getElementById('Upgrade-your-plan').classList.add('hidden')">
+                <svg
+                  class="text-white"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div
+            class="grid w-full h-full grid-cols-1 overflow-hidden overflow-y-scroll md:grid-cols-3 md:overflow-y-hidden lg:overflow-y-hidden"
+          >
+            <div class="flex flex-col justify-between p-5 border-[#444444] border-r-[1px]">
+               <div><h1 class="text-xl font-medium text-white">Free</h1><p class="text-[#96B4B4] mb-4">USD $0/month</p></div>
+            </div>
+            <div class="flex flex-col justify-between p-5 border-[#444444] border-r-[1px]">
+               <div><h1 class="text-xl font-medium text-white">Plus</h1><p class="text-[#96B4B4] mb-4">USD $20/month</p></div>
+            </div>
+            <div class="flex flex-col justify-between p-5 border-[#444444] border-r-[1px]">
+               <div><h1 class="text-xl font-medium text-white">Team</h1><p class="text-[#96B4B4] mb-4">USD $25 per person/month*</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <header>
+      <!-- Mobile Nav -->
+      <nav
+        class="flex items-center justify-between w-full h-auto pl-3 pr-3 bg-transparent border-y-[1px] border-gray-600 md:hidden"
+      >
+        <div id="nav-list" class="text-white" onclick="toggleMobileSidebar()">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M3 8C3 7.44772 3.44772 7 4 7H20C20.5523 7 21 7.44772 21 8C21 8.55228 20.5523 9 20 9H4C3.44772 9 3 8.55228 3 8ZM3 16C3 15.4477 3.44772 15 4 15H14C14.5523 15 15 15.4477 15 16C15 16.5523 14.5523 17 14 17H4C3.44772 17 3 16.5523 3 16Z"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </div>
+
+        <section>
+          <button class="px-3 py-2 rounded-[12px]">
+            <h1 class="flex items-center text-lg font-semibold text-white">
+              FAT-BOY AI
+            </h1>
+          </button>
+        </section>
+
+        <button id="dark-mode-btn-mobile" class="text-white text-xl" title="Toggle Dark Mode">
+          🌙
+        </button>
+      </nav>
+
+      <!-- Desktop Sidebar -->
+      <nav
+        id="desktop-sidebar"
+        class="hidden md:flex md:flex-col w-[260px] bg-[#171717] transition-all duration-300 flex-shrink-0"
+      >
+        <div
+          class="h-screen bg-[#171717] px-3 py-[14px] w-full flex flex-col justify-between"
+        >
+          <div class="flex flex-col">
+            <div
+              class="flex items-center justify-between px-2 py-2 rounded-lg hover:bg-[#212121] cursor-pointer"
+            >
+              <div class="flex items-center">
+                <!-- NEW ROBOT ICON -->
+                <div
+                  class="flex items-center justify-center mr-2 bg-white rounded-full w-7 h-7"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C14.21 4 16 5.79 16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4ZM7 9C7 9 7 9 7 9C7 9 7 9 7 9V10C7 11.66 8.34 13 10 13V14H14V13C15.66 13 17 11.66 17 10V9C17 9 17 9 17 9C17 9 17 9 17 9H7ZM8.5 18H15.5C16.33 18 17 17.33 17 16.5C17 15.67 16.33 15 15.5 15H8.5C7.67 15 7 15.67 7 16.5C7 17.33 7.67 18 8.5 18Z" fill="black"/>
+                  </svg>
+                </div>
+                <div>
+                  <h1 class="text-sm font-medium text-white">New chat</h1>
+                </div>
+              </div>
+              <svg
+                class="text-white w-[18px] h-[18px]"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon-md"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M16.7929 2.79289C18.0118 1.57394 19.9882 1.57394 21.2071 2.79289C22.4261 4.01184 22.4261 5.98815 21.2071 7.20711L12.7071 15.7071C12.5196 15.8946 12.2652 16 12 16H9C8.44772 16 8 15.5523 8 15V12C8 11.7348 8.10536 11.4804 8.29289 11.2929L16.7929 2.79289ZM19.7929 4.20711C19.355 3.7692 18.645 3.7692 18.2071 4.2071L10 12.4142V14H11.5858L19.7929 5.79289C20.2308 5.35499 20.2308 4.64501 19.7929 4.20711ZM6 5C5.44772 5 5 5.44771 5 6V18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V14C19 13.4477 19.4477 13 20 13C20.5523 13 21 13.4477 21 14V18C21 19.6569 19.6569 21 18 21H6C4.34315 21 3 19.6569 3 18V6C3 4.34314 4.34315 3 6 3H10C10.5523 3 11 3.44771 11 4C11 4.55228 10.5523 5 10 5H6Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+
+            <div class="text-xs font-medium text-[#676767]">
+              <div><h1 class="px-2 pt-6 pb-2">Today</h1></div>
+              <div class="p-2 text-sm font-normal text-white hover:bg-[#212121] rounded-lg cursor-pointer"><h2 class="truncate">Web Development</h2></div>
+              <div class="p-2 text-sm font-normal text-white hover:bg-[#212121] rounded-lg cursor-pointer"><h2 class="truncate">Software Practices</h2></div>
+              <div class="p-2 text-sm font-normal text-white hover:bg-[#212121] rounded-lg cursor-pointer"><h2 class="truncate">Programming</h2></div>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-end">
+            <div class="flex items-center gap-2 py-[10px] pl-2 hover:bg-[#2F2F2F] w-auto rounded-xl cursor-pointer">
+              <div class="text-white border-2 rounded-full w-7 h-7 border-[#292929] flex justify-center items-center">✨</div>
+              <div>
+                <h1 class="text-sm font-normal text-white">Upgrade plan</h1>
+                <p class="text-xs font-normal text-[#676767]">Get GPT-4, DALL·E</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 py-[10px] pl-2 hover:bg-[#2F2F2F] w-auto rounded-xl cursor-pointer">
+              <div class="flex items-center justify-center w-8 text-white">
+                <img class="rounded-full" src="https://lh3.googleusercontent.com/a/ACg8ocKu7kRG0wBgGFLTuqOultb-EdeAZAyAsRPfwLOuiA5i=s96-c" alt="" />
+              </div>
+              <div>
+                <h1 class="text-sm font-normal text-white">shree jaybhay</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile Sidebar Drawer -->
+      <div id="nav-translate" class="fixed inset-0 z-50 hidden">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleMobileSidebar()"></div>
+        <!-- Sidebar Content -->
+        <nav class="absolute left-0 top-0 h-full w-[80%] bg-[#171717] shadow-xl transform transition-transform duration-300 -translate-x-full" id="mobile-sidebar-content">
+            <div class="flex flex-col h-full px-4 py-4">
+                <div class="flex justify-between items-center mb-6">
+                     <h1 class="text-xl font-bold text-white">Menu</h1>
+                     <button onclick="toggleMobileSidebar()" class="text-white text-2xl">&times;</button>
+                </div>
+                <div class="p-2 text-sm font-normal text-white hover:bg-[#212121] rounded-lg cursor-pointer mb-2">Web Development</div>
+                <div class="p-2 text-sm font-normal text-white hover:bg-[#212121] rounded-lg cursor-pointer mb-2">Software Practices</div>
+                <div class="mt-auto border-t border-gray-700 pt-4">
+                     <p class="text-sm text-white">shree jaybhay</p>
+                </div>
+            </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content Area (Desktop) -->
+    <main
+      id="main-content"
+      class="hidden md:flex md:flex-col flex-1 bg-[#212121] transition-all duration-300"
+    >
+      <section class="w-full p-2 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <button
+            id="sidebar-toggle"
+            class="p-2 rounded-[12px] hover:bg-[#2F2F2F] cursor-pointer z-50 flex items-center justify-center transition-all duration-200 w-10 h-10"
+            title="Toggle Sidebar"
+            style="border: 2px solid white;"
+          >
+            <span style="color: white; font-size: 24px; font-weight: bold;">☰</span>
+          </button>
+          <button
+            id="Chat-Btn"
+            class="px-3 py-2 rounded-[12px] hover:bg-[#2F2F2F] cursor-pointer z-50"
+          >
+          <h1 class="flex items-center text-lg font-semibold text-white">FAT-BOY AI</h1>
+        </button>
+
+        <button
+          id="dark-mode-btn"
+          class="p-2 rounded-[12px] hover:bg-[#2F2F2F] cursor-pointer text-white flex items-center gap-1"
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+      </section>
+      
+      <!-- CENTER CONTENT -->
+      <div class="flex flex-col items-center justify-end md:w-[100%] h-[calc(100%-60px)]">
+        <section class="flex flex-col justify-between w-[100%] mb-[15px] items-center">
+          
+          <!-- MESSAGES CONTAINER -->
+          <div id="chat-messages" class="w-full max-w-3xl mx-auto px-4 overflow-y-auto flex-1 hidden" style="max-height: calc(100vh - 200px);">
+          </div>
+          
+          <!-- WELCOME SCREEN -->
+          <div id="welcome-screen" class="lg:mt-5 lg:mb-5">
+            <div class="flex flex-col items-center justify-center mb-5">
+              <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full">
+                 <!-- ROBOT ICON LARGE -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C14.21 4 16 5.79 16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4ZM7 9C7 9 7 9 7 9C7 9 7 9 7 9V10C7 11.66 8.34 13 10 13V14H14V13C15.66 13 17 11.66 17 10V9C17 9 17 9 17 9C17 9 17 9 17 9H7ZM8.5 18H15.5C16.33 18 17 17.33 17 16.5C17 15.67 16.33 15 15.5 15H8.5C7.67 15 7 15.67 7 16.5C7 17.33 7.67 18 8.5 18Z" fill="black"/>
+                </svg>
+              </div>
+              
+              <!-- HEADING -->
+              <h1 class="
+                font-handwriting 
+                text-5xl md:text-6xl lg:text-7xl   
+                font-bold 
+                bg-gradient-to-r 
+                from-blue-500      
+                via-cyan-400       
+                to-indigo-600      
+                text-transparent 
+                bg-clip-text 
+                animate-gradient   
+                text-center
+                leading-tight
+              ">
+                How can I help you today?
+              </h1>
+            </div>
+          </div>
+
+          <!-- Suggestion Grid -->
+          <div class="hidden lg:block lg:mt-72 xl:mt-28">
+             <div class="flex justify-center w-auto h-auto">
+              <div class="grid gap-2 md:grid-rows-2 md:grid-cols-2">
+                <div class="h-[66px] bg-transparent w-[372px] flex items-center border-[1px] border-[#4E4E4E] rounded-[12px] justify-between pr-4 hover:bg-[#2F2F2F] group cursor-pointer">
+                  <div class="flex flex-col justify-center px-4 items-start">
+                    <h1 class="text-sm font-medium text-white">Suggest some codenames</h1>
+                    <p class="text-sm font-medium text-[#828282]">for a project introducing flexible work</p>
+                  </div>
+                </div>
+                 <div class="h-[66px] bg-transparent w-[372px] flex items-center border-[1px] border-[#4E4E4E] rounded-[12px] justify-between pr-4 hover:bg-[#2F2F2F] group cursor-pointer">
+                  <div class="flex flex-col justify-center px-4 items-start">
+                    <h1 class="text-sm font-medium text-white">Explain options trading</h1>
+                    <p class="text-sm font-medium text-[#828282]">if I'm familiar with buying and selling</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="resize-y">
+          <div class="flex items-center w-[56.07613469985359vw] bg-transparent m-auto border-[1px] border-[#4E4E4E] rounded-[12px] py-[14px] pl-4 pr-4 justify-between 2xl:w-[766px] resize-y">
+            <input id="prompt-input" class="w-full bg-transparent outline-none border-none text-white placeholder-[#828282] resize-y" type="text" placeholder="Message FAT-BOY AI..." />
+            <!-- SEND BUTTON (Desktop) -->
+            <button id="send-btn" class="bg-[#383838] w-[30px] h-[30px] flex items-center justify-center rounded-[8px] transition-colors duration-200">
+              <svg class="text-[#1E1E1E]" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="px-16 py-2 text-center md:px-10">
+          <div class="">
+            <span class="text-sm font-normal text-white md:font-light md:text-xs">FAT-BOY AI can make mistakes. Consider checking important information.</span>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Mobile Main -->
+    <main class="md:hidden h-[calc(90vh-46px)] flex flex-col justify-end items-center mt-auto">
+      <section class="flex flex-col items-center justify-end h-full">
+        <div class="lg:mt-5 lg:mb-5">
+          <div class="flex flex-col items-center justify-center mb-28">
+            <div class="flex items-center justify-center w-12 h-12 mb-3 bg-white rounded-full">
+                <!-- ROBOT ICON MOBILE -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 4C14.21 4 16 5.79 16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8C8 5.79 9.79 4 12 4ZM7 9C7 9 7 9 7 9C7 9 7 9 7 9V10C7 11.66 8.34 13 10 13V14H14V13C15.66 13 17 11.66 17 10V9C17 9 17 9 17 9C17 9 17 9 17 9H7ZM8.5 18H15.5C16.33 18 17 17.33 17 16.5C17 15.67 16.33 15 15.5 15H8.5C7.67 15 7 15.67 7 16.5C7 17.33 7.67 18 8.5 18Z" fill="black"/>
+                </svg>
+            </div>
+            
+            <!-- HEADING MOBILE -->
+            <h1 class="
+                font-handwriting 
+                text-4xl md:text-5xl   
+                font-bold 
+                bg-gradient-to-r 
+                from-blue-500      
+                via-cyan-400       
+                to-indigo-600      
+                text-transparent 
+                bg-clip-text 
+                animate-gradient   
+                text-center
+                leading-tight
+                px-4
+              ">
+                How can I help you today?
+            </h1>
+          </div>
+        </div>
+
+        <div class="w-full px-4">
+          <div class="h-16 bg-transparent w-[94vw] m-auto flex items-center border-[1px] border-[#4E4E4E] rounded-[12px] justify-between pr-4 hover:bg-[#2F2F2F] group cursor-pointer mb-2 px-2 ">
+            <div class="flex flex-col justify-center px-[1.171303074670571vw] py-[ 1.9769357495881383vh] items-start">
+              <h1 class="text-sm font-medium text-white">Suggest some codenames</h1>
+              <p class="text-sm font-medium text-[#828282]">for a project introducing flexible work</p>
+            </div>
+          </div>
+          
+          <div class="bg-transparent w-[94vw] m-auto h-[48px] border-[1px] border-[#4E4E4E] rounded-[18px]">
+            <div class="flex items-center justify-center w-full h-full px-3">
+              <input id="prompt-input-mobile" class="w-full text-white bg-transparent border-none outline-none placeholder-[#828282]" type="text" placeholder="Message FAT-BOY AI..." />
+              
+              <!-- SEND BUTTON MOBILE -->
+              <button id="send-btn-mobile" class="bg-[#383838] w-[30px] h-[30px] flex items-center justify-center rounded-[8px] transition-colors duration-200">
+                <svg class="text-[#1E1E1E]" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="py-2 mx-4 leading-3 text-center">
+            <span class="text-[#828282] text-xs font-normal">FAT-BOY AI can make mistakes. Consider checking important information</span>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Scripts for Functionality -->
+    <script>
+        // 1. DARK MODE TOGGLE LOGIC
+        const darkModeBtn = document.getElementById('dark-mode-btn');
+        const darkModeBtnMobile = document.getElementById('dark-mode-btn-mobile');
+        const body = document.body;
+        let isDarkMode = true;
+
+        function updateDarkModeUI() {
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                if (darkModeBtn) darkModeBtn.innerHTML = '🌙';
+                if (darkModeBtnMobile) darkModeBtnMobile.innerHTML = '🌙';
+            } else {
+                body.classList.add('light-mode');
+                if (darkModeBtn) darkModeBtn.innerHTML = '☀️';
+                if (darkModeBtnMobile) darkModeBtnMobile.innerHTML = '☀️';
+            }
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            updateDarkModeUI();
+        }
+
+        if (darkModeBtn) {
+            darkModeBtn.addEventListener('click', toggleDarkMode);
+        }
+        if (darkModeBtnMobile) {
+            darkModeBtnMobile.addEventListener('click', toggleDarkMode);
+        }
+
+        // 2. SIDEBAR TOGGLE LOGIC (Desktop)
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('desktop-sidebar');
+        const mainContent = document.getElementById('main-content');
+        const sidebarToggleIcon = sidebarToggle.querySelector('span');
+        let isSidebarOpen = true;
+
+        sidebarToggle.addEventListener('click', () => {
+            isSidebarOpen = !isSidebarOpen;
+            if (!isSidebarOpen) {
+                // Close Sidebar
+                sidebar.style.display = 'none';
+                mainContent.style.width = '100%';
+                sidebarToggleIcon.textContent = '▶';
+            } else {
+                // Open Sidebar
+                sidebar.style.display = 'flex';
+                mainContent.style.width = '';
+                sidebarToggleIcon.textContent = '☰';
+            }
+        });
+
+        // 3. MOBILE SIDEBAR LOGIC
+        const navList = document.getElementById('nav-list');
+        const mobileSidebar = document.getElementById('nav-translate');
+        const mobileContent = document.getElementById('mobile-sidebar-content');
+
+        function toggleMobileSidebar() {
+            if (mobileSidebar.classList.contains('hidden')) {
+                mobileSidebar.classList.remove('hidden');
+                // Small delay to allow display:block to apply before animating translate
+                setTimeout(() => {
+                    mobileContent.classList.remove('-translate-x-full');
+                }, 10);
+            } else {
+                mobileContent.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    mobileSidebar.classList.add('hidden');
+                }, 300);
+            }
+        }
+        navList.addEventListener('click', toggleMobileSidebar);
+
+        // 4. INPUT ARROW BUTTON ACTIVE LOGIC
+        function setupInputArrow(inputId, btnId) {
+            const input = document.getElementById(inputId);
+            const btn = document.getElementById(btnId);
+            
+            if(input && btn) {
+                input.addEventListener('input', (e) => {
+                    if(e.target.value.trim().length > 0) {
+                        btn.classList.remove('bg-[#383838]');
+                        btn.classList.add('bg-white', 'text-black');
+                    } else {
+                        btn.classList.add('bg-[#383838]');
+                        btn.classList.remove('bg-white', 'text-black');
+                    }
+                });
+            }
+        }
+
+        setupInputArrow('prompt-input', 'send-btn');
+        setupInputArrow('prompt-input-mobile', 'send-btn-mobile');
+
+        // ========== API CHAT FUNCTIONALITY ==========
+        let deepThink = false;
+        let conversationId = null;
+
+        // Send message function
+        function sendMessage() {
+            let msg = $('#prompt-input').val().trim() || $('#prompt-input-mobile').val().trim();
+            if (!msg) return;
+
+            // Hide welcome screen, show messages
+            $('#welcome-screen').hide();
+            $('.hidden.lg\\:block').hide(); // Hide suggestion grid
+            $('#chat-messages').removeClass('hidden');
+
+            // Add user message
+            $('#chat-messages').append(`
+                <div class="flex justify-end mb-4">
+                    <div class="bg-blue-600 text-white px-4 py-3 rounded-2xl max-w-[80%] rounded-br-sm">
+                        <p class="text-sm">${msg}</p>
+                    </div>
+                </div>
+            `);
+
+            // Clear inputs
+            $('#prompt-input').val('');
+            $('#prompt-input-mobile').val('');
+            
+            // Reset button colors
+            $('#send-btn').removeClass('bg-white text-black').addClass('bg-[#383838]');
+            $('#send-btn-mobile').removeClass('bg-white text-black').addClass('bg-[#383838]');
+
+            // Add typing indicator
+            let typingId = 'typing-' + Date.now();
+            $('#chat-messages').append(`
+                <div class="flex justify-start mb-4" id="${typingId}">
+                    <div class="bg-[#2F2F2F] border border-[#4E4E4E] px-4 py-3 rounded-2xl max-w-[80%] rounded-bl-sm">
+                        <p class="text-sm text-white flex items-center gap-2">
+                            <span>🤖</span>
+                            <span class="animate-pulse">Thinking...</span>
+                        </p>
+                    </div>
+                </div>
+            `);
+            scrollChat();
+
+            // API Call
+            $.ajax({
+                url: "https://copilot5.p.rapidapi.com/copilot",
+                method: "POST",
+                headers: {
+                    "x-rapidapi-key": "0523e5c848msh1a8a496e68ca09fp161dfajsn0d537ce93f35",
+                    "x-rapidapi-host": "copilot5.p.rapidapi.com",
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    message: msg,
+                    conversation_id: conversationId,
+                    mode: "CHAT",
+                    markdown: true,
+                    system_prompt: deepThink ? 
+                        "Think step by step deeply before answering." : 
+                        "Answer concisely."
+                })
+            }).done(res => {
+                $(`#${typingId}`).remove();
+                conversationId = res.data.conversation_id;
+                let out = marked.parse(res.data.message);
+                
+                $('#chat-messages').append(`
+                    <div class="flex justify-start mb-4">
+                        <div class="bg-[#2F2F2F] border border-[#4E4E4E] px-4 py-3 rounded-2xl max-w-[80%] rounded-bl-sm">
+                            <p class="text-sm text-white mb-2 flex items-center gap-2">
+                                <span>🤖</span>
+                                <span class="font-semibold">Fat-Boy AI</span>
+                            </p>
+                            <div class="text-sm text-gray-200 prose prose-invert max-w-none">
+                                ${out}
+                            </div>
+                            <div class="flex gap-3 mt-3 text-gray-400 text-sm">
+                                <span class="cursor-pointer hover:text-white" onclick="copyText(this)" title="Copy">📋 Copy</span>
+                                <span class="cursor-pointer hover:text-white">👍</span>
+                                <span class="cursor-pointer hover:text-white">👎</span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                scrollChat();
+            }).fail(err => {
+                $(`#${typingId}`).remove();
+                $('#chat-messages').append(`
+                    <div class="flex justify-start mb-4">
+                        <div class="bg-red-900/30 border border-red-500 px-4 py-3 rounded-2xl max-w-[80%]">
+                            <p class="text-sm text-red-400">
+                                ❌ Error: ${err.responseJSON?.message || err.statusText || "Failed to fetch response"}
+                            </p>
+                        </div>
+                    </div>
+                `);
+                scrollChat();
+            });
+        }
+
+        // Copy text function
+        function copyText(el) {
+            let text = $(el).parent().prev().text();
+            navigator.clipboard.writeText(text);
+            $(el).text('✅ Copied!');
+            setTimeout(() => $(el).text('📋 Copy'), 2000);
+        }
+
+        // Scroll chat to bottom
+        function scrollChat() {
+            let chat = document.getElementById('chat-messages');
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Send button click handlers
+        $('#send-btn').click(sendMessage);
+        $('#send-btn-mobile').click(sendMessage);
+
+        // Enter key to send
+        $('#prompt-input').keydown(e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        $('#prompt-input-mobile').keydown(e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+    </script>
+  </body>
+</html>
